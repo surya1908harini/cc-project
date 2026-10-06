@@ -1256,12 +1256,16 @@
     let simAutoPlayTimer = null;
     let currentMode = 'video'; // 'video' or 'interactive'
 
-    // Pre-mapped videos saved in project videos/ folder!
+    // Pre-mapped videos saved in project videos/ folder for all 8 experiments!
     const videoMap = {
       1: { src: "videos/ex1.mp4", name: "Ex 1: Google Drive, Sheets & Notes Tutorial Video" },
       2: { src: "videos/ex2.mp4", name: "Ex 2: Linux Virtual Machine on OnWorks Tutorial Video" },
+      3: { src: "videos/ex3.mp4", name: "Ex 3: Static Website on GitHub Pages Tutorial Video" },
       4: { src: "videos/ex4.mp4", name: "Ex 4: Google Cloud Platform Tutorial Video" },
-      7: { src: "videos/ex7.mp4", name: "Ex 7: Amazon Redshift with S3 Tutorial Video" }
+      5: { src: "videos/ex5.mp4", name: "Ex 5: Google App Engine Tutorial Video" },
+      6: { src: "videos/ex6.mp4", name: "Ex 6: Microsoft Azure Hosting Tutorial Video" },
+      7: { src: "videos/ex7.mp4", name: "Ex 7: Amazon Redshift with S3 Tutorial Video" },
+      8: { src: "videos/ex8.mp4", name: "Ex 8: NoSQL MongoDB Query Tutorial Video" }
     };
 
     const programListEl = document.getElementById('programList');
