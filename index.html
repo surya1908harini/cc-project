@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud Computing Lab - Video Tutorial Portal | Trinity College for Women</title>
+  <style>
+    :root {
+      --bg-main: #0b0f19;
+      --bg-card: #151d2e;
+      --bg-card-hover: #1e293b;
+      --sidebar-bg: #0f172a;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #818cf8;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --code-bg: #030712;
+      --success: #10b981;
+      --warning: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar */
+    aside {
+      width: 360px;
+      min-width: 330px;
+      background: var(--sidebar-bg);
+      border-right: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+
+    .sidebar-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .header-tag-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--primary);
+    }
+
+    .deploy-badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--success);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .sidebar-header h2 {
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .sidebar-header p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .program-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding: 10px;
+    }
+
+    .program-item {
+      padding: 12px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 6px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+
+    .program-item:hover {
+      background: var(--bg-card-hover);
+    }
+
+    .program-item.active {
+      background: rgba(56, 189, 248, 0.12);
+      border-color: rgba(56, 189, 248, 0.35);
+    }
+
+    .prog-num {
+      background: #1e293b;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      min-width: 28px;
+      text-align: center;
+    }
+
+    .program-item.active .prog-num {
+      background: var(--primary);
+      color: #0b0f19;
+    }
+
+    .prog-title {
+      font-size: 0.88rem;
+      font-weight: 500;
+      line-height: 1.35;
+      color: #e2e8f0;
+    }
+
+    .video-status {
+      font-size: 0.72rem;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+
+    .status-video {
+      color: var(--success);
+    }
+
+    .status-interactive {
+      color: #38bdf8;
+    }
+
+    /* Main Area */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      height: 100vh;
+    }
+
+    .top-bar {
+      padding: 14px 24px;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    .top-bar-title h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mode-switch-btn {
+      background: #1e293b;
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .mode-switch-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--primary);
+      border-color: var(--primary);
+      font-weight: 700;
+    }
+
+    .content-container {
+      padding: 24px 30px;
+      max-width: 1100px;
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Video Player Box */
+    .video-card {
+      background: #000;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.8);
+      position: relative;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      min-height: 420px;
+      max-height: 580px;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      max-height: 580px;
+      display: block;
+      outline: none;
+    }
+
+    /* Interactive Tutorial Simulator */
+    .interactive-player {
+      width: 100%;
+      min-height: 440px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: radial-gradient(circle at 50% 30%, #1e293b, #0b0f19);
+    }
+
+    .sim-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sim-step-badge {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sim-nav-btns {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sim-screen {
+      background: #030712;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+    }
+
+    .sim-screen-bar {
+      background: #111827;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .screen-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .screen-title {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      font-family: monospace;
+      margin-left: 8px;
+    }
+
+    .sim-body {
+      padding: 22px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .sim-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #38bdf8;
+    }
+
+    .sim-desc {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+
+    .sim-action-box {
+      background: #0f172a;
+      border-left: 4px solid var(--primary);
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: #f1f5f9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      overflow-x: auto;
+    }
+
+    .sim-footer-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      padding-top: 12px;
+    }
+
+    .sim-progress-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .p-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #334155;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .p-dot.active {
+      background: var(--primary);
+      transform: scale(1.3);
+    }
+
+    /* Video Action & Quick URL Bar */
+    .video-action-bar {
+      background: var(--bg-card);
+      padding: 12px 18px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .btn {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .btn:hover {
+      background: #334155;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284c7, #2563eb);
+      border: none;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .speed-selector {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .speed-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .speed-btn.active {
+      background: var(--primary);
+      color: #0b0f19;
+      font-weight: bold;
+      border-color: var(--primary);
+    }
+
+    /* Tabs Section */
+    .details-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    .tabs-header {
+      display: flex;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border-color);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .tab-content {
+      padding: 22px;
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .tab-content h4 {
+      font-size: 1.02rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+
+    .tab-content p {
+      color: #cbd5e1;
+      line-height: 1.6;
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    /* Steps list */
+    .steps-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      font-size: 0.92rem;
+      line-height: 1.5;
+    }
+
+    .step-number {
+      background: rgba(56, 189, 248, 0.2);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    /* Code block */
+    .code-container {
+      position: relative;
+      background: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+
+    .code-header {
+      background: #111827;
+      padding: 8px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    pre {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .copy-btn {
+      background: #1e293b;
+      border: 1px solid var(--border-color);
+      color: #cbd5e1;
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: #0b0f19;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .drag-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(14, 165, 233, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.3rem;
+      z-index: 20;
+      border: 3px dashed #fff;
+      border-radius: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Left Sidebar (8 Programs) -->
+  <aside>
+    <div class="sidebar-header">
+      <div class="header-tag-row">
+        <span class="badge">Lab Practicals</span>
+        <span class="deploy-badge">● Deploy Ready</span>
+      </div>
+      <h2>Cloud Computing Lab</h2>
+      <p>Trinity College for Women, Namakkal</p>
+    </div>
+
+    <ul class="program-list" id="programList">
+      <!-- Generated by JS -->
+    </ul>
+  </aside>
+
+  <!-- Main View -->
+  <main>
+    <div class="top-bar">
+      <div class="top-bar-title">
+        <h3 id="currentProgTitle">Loading program...</h3>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <button class="mode-switch-btn active" id="videoModeBtn">🎬 Video Player</button>
+        <button class="mode-switch-btn" id="interactiveModeBtn">🖥️ Interactive Tutorial</button>
+        <button class="btn" id="selectVideoBtn" title="Change or add custom video file">
+          📁 Custom Video
+        </button>
+        <input type="file" id="videoFileInput" accept="video/*" class="hidden">
+      </div>
+    </div>
+
+    <div class="content-container">
+
+      <!-- Video Player Card -->
+      <div class="video-card" id="videoDropZone">
+        <div class="drag-overlay hidden" id="dragOverlay">
+          📂 Drop Video File Here to Play
+        </div>
+
+        <div class="video-wrapper">
+          <!-- Real HTML5 Video Player -->
+          <video id="mainVideoPlayer" controls autoplay playsinline></video>
+
+          <!-- Interactive Visual Walkthrough Simulator -->
+          <div class="interactive-player hidden" id="interactivePlayer">
+            <div class="sim-header">
+              <span class="sim-step-badge" id="simStepBadge">Step 1 of 6</span>
+              <div class="sim-nav-btns">
+                <button class="btn" id="simPrevBtn">◀ Back</button>
+                <button class="btn btn-primary" id="simAutoPlayBtn">⏱️ Auto-Play</button>
+                <button class="btn" id="simNextBtn">Next ▶</button>
+              </div>
+            </div>
+
+            <div class="sim-screen">
+              <div class="sim-screen-bar">
+                <div class="screen-dots">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <div class="screen-title" id="simScreenTitle">Console / Environment</div>
+              </div>
+              <div class="sim-body">
+                <div class="sim-title" id="simStepTitle">Loading Step...</div>
+                <div class="sim-desc" id="simStepDesc">Step description here...</div>
+                <div class="sim-action-box" id="simActionBox">
+                  <span id="simActionText">Action Command</span>
+                  <button class="copy-btn" id="simCopyBtn">📋 Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-footer-controls">
+              <div style="font-size:0.82rem; color:var(--text-muted);" id="simTips">
+                💡 Tip: Click Next or Auto-Play to simulate the tutorial step-by-step
+              </div>
+              <div class="sim-progress-dots" id="simProgressDots"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Video Action Bar -->
+        <div class="video-action-bar">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.85rem; color:var(--text-muted);" id="currentPlayingName">Playing Video</span>
+          </div>
+
+          <!-- Speed selector -->
+          <div class="speed-selector" id="speedBox">
+            Speed:
+            <button class="speed-btn" data-speed="0.75">0.75x</button>
+            <button class="speed-btn active" data-speed="1.0">1x</button>
+            <button class="speed-btn" data-speed="1.25">1.25x</button>
+            <button class="speed-btn" data-speed="1.5">1.5x</button>
+            <button class="speed-btn" data-speed="2.0">2x</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Experiment Information & Tabs -->
+      <div class="details-card">
+        <div class="tabs-header">
+          <button class="tab-btn active" data-tab="aim">🎯 Aim & Algorithm</button>
+          <button class="tab-btn" data-tab="tutorial">📖 Tutorial Walkthrough Guide</button>
+          <button class="tab-btn" data-tab="code">💻 Code / Commands</button>
+          <button class="tab-btn" data-tab="output">📊 Expected Output</button>
+          <button class="tab-btn" data-tab="notes">📝 My Notes</button>
+        </div>
+
+        <!-- Aim & Algorithm Tab -->
+        <div class="tab-content active" id="tab-aim">
+          <h4>AIM</h4>
+          <p id="aimText"></p>
+
+          <h4 style="margin-top:20px;">ALGORITHM & STEPS (Record Book)</h4>
+          <ul class="steps-list" id="stepsList"></ul>
+        </div>
+
+        <!-- Tutorial Guide Tab -->
+        <div class="tab-content" id="tab-tutorial">
+          <h4>STEP-BY-STEP TUTORIAL WALKTHROUGH GUIDE</h4>
+          <p style="color:#94a3b8; font-size:0.9rem;">இந்த பிராக்டிகல் செய்முறைக்கான முழுமையான ஸ்கிரீன் கைட் மற்றும் படிநிலைகள்:</p>
+          <div id="tutorialGuideList" style="display:flex; flex-direction:column; gap:14px; margin-top:10px;"></div>
+        </div>
+
+        <!-- Code Tab -->
+        <div class="tab-content" id="tab-code">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <h4 style="margin:0;">PROGRAM CODING / SCRIPT</h4>
+            <button class="copy-btn" id="copyCodeBtn">📋 Copy Code</button>
+          </div>
+          <div class="code-container">
+            <div class="code-header">
+              <span id="codeLangLabel">Source Code</span>
+            </div>
+            <pre><code id="codeText"></code></pre>
+          </div>
+        </div>
+
+        <!-- Output Tab -->
+        <div class="tab-content" id="tab-output">
+          <h4>EXPECTED OUTPUT / RESULT</h4>
+          <div id="outputText" style="line-height:1.6; color:#cbd5e1; font-size:0.95rem;"></div>
+        </div>
+
+        <!-- Notes Tab -->
+        <div class="tab-content" id="tab-notes">
+          <h4>Personal Practical Notes</h4>
+          <p>இந்த எக்ஸ்பெரிமென்ட்க்கான குறிப்புகளை இங்கே டைப் செய்து சேமித்து வைக்கலாம் (Auto-saved).</p>
+          <textarea id="notesArea" style="width:100%; height:150px; background:#0b0f19; color:#f8fafc; border:1px solid var(--border-color); border-radius:8px; padding:12px; font-size:0.9rem; outline:none;"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+    // 8 Cloud Computing Lab Experiments from Trinity College Notebook
+    const programsData = [
+      {
+        id: 1,
+        title: "1. Google Drive with Spreadsheet and Notes",
+        shortTitle: "Ex 1: Google Drive & Sheets",
+        videoSrc: "videos/ex1.mp4",
+        videoName: "Ex 1: Google Drive, Sheets & Notes Tutorial Video",
+        aim: "To develop an application for working with google drive to make spreadsheet and notes.",
+        steps: [
+          "Go to google drive and sign in.",
+          "Click on the new button.",
+          "Select 'google sheets' from the dropdown menu.",
+          "Name your spreadsheets.",
+          "Setup the spreadsheet structure to create columns and format a column.",
+          "Populate spreadsheet with data.",
+          "Again go to step (new button).",
+          "Select 'Google Docs' from the dropdown menu.",
+          "Name your notes document.",
+          "Format notes document as needed.",
+          "Add content to notes document.",
+          "Move your spreadsheets and notes document into the folder.",
+          "Set permissions for folder and files. Share with team members or collaborators. Set edit or view only permission.",
+          "Close the google drive."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: drive.google.com",
+            title: "Access Google Drive & Login",
+            desc: "Open your web browser (Chrome), navigate to drive.google.com, and sign in with your Google account.",
+            action: "https://drive.google.com"
+          },
+          {
+            screen: "Google Drive > '+ New' Menu",
+            title: "Create Google Spreadsheet",
+            desc: "Click on the '+ New' button in the top left sidebar and select 'Google Sheets'. Rename it to 'Student Marklist'.",
+            action: "+ New ➔ Google Sheets"
+          },
+          {
+            screen: "Google Sheets Window",
+            title: "Enter Data and Formulas",
+            desc: "Create columns: S.No, Name, Reg No, Subject 1, Subject 2, Total, Average. Use formulas =SUM(D2:E2) and format headings with background color.",
+            action: "=SUM(D2:E2) | =AVERAGE(D2:E2)"
+          },
+          {
+            screen: "Google Drive > '+ New' Menu",
+            title: "Create Google Docs Notes",
+            desc: "Click '+ New' ➔ select 'Google Docs'. Rename document to 'Lab Notes' and insert formatted tables or resume text.",
+            action: "+ New ➔ Google Docs"
+          },
+          {
+            screen: "Drive Folder & Permissions",
+            title: "Move to Folder & Share",
+            desc: "Create a folder named 'Cloud Practical'. Move both files inside. Right-click folder ➔ Share ➔ add collaborator email with Editor/Viewer permission.",
+            action: "Right Click Folder ➔ Share ➔ Set 'Editor' or 'Viewer'"
+          }
+        ],
+        code: `// Formulas for Google Sheets:\n=SUM(D2:H2)\n=AVERAGE(D2:H2)\n=IF(MIN(D2:H2)>=40, "PASS", "FAIL")\n\n// Folder Organization:\nFolder: 'Cloud Practical'\nFiles: 'Student Marklist' (Sheets), 'Practical Notes' (Docs)`,
+        output: `• Google Sheets and Google Docs successfully created.\n• Files organized into dedicated Drive folder.\n• Share link generated with Editor/Viewer permission.`
+      },
+      {
+        id: 2,
+        title: "2. Linux Virtual Machine",
+        shortTitle: "Ex 2: Linux Virtual Machine",
+        videoSrc: "videos/ex2.mp4",
+        videoName: "Ex 2: Linux Virtual Machine on OnWorks Tutorial Video",
+        aim: "To develop an application for launch a linux virtual machine.",
+        steps: [
+          "Go to google and sign in the account.",
+          "To search the website onworks & click that website.",
+          "Click the ubuntu 22 server.",
+          "Run the online OS linux free ubuntu 22 server.",
+          "Click the browser like firefox, chrome, google, etc., ...",
+          "Search something in the browser and press the enter.",
+          "Like google, we can search anything using this virtual box.",
+          "Close the google account."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: google.com",
+            title: "Search OnWorks Cloud OS Platform",
+            desc: "Open Google in your browser, search for 'OnWorks free online OS' and open www.onworks.net.",
+            action: "https://www.onworks.net"
+          },
+          {
+            screen: "OnWorks Catalog",
+            title: "Select Ubuntu 22 Server / Workstation",
+            desc: "From the operating system catalog, select Ubuntu 22 online server/workstation.",
+            action: "Select 'Ubuntu 22 Server' ➔ Click 'Run Online'"
+          },
+          {
+            screen: "Cloud Virtual Machine Console",
+            title: "Initialize & Launch Virtual Machine",
+            desc: "Click 'Start' and wait for the cloud virtual machine session to boot up the Linux desktop.",
+            action: "Session Boot: Ubuntu 22 LTS Desktop loaded in browser"
+          },
+          {
+            screen: "Ubuntu 22 Desktop",
+            title: "Open Browser or Terminal inside Linux",
+            desc: "Click on the Firefox/Chrome icon inside the virtual Linux machine. Search for educational topics to verify internet connectivity.",
+            action: "Terminal: uname -a && whoami"
+          },
+          {
+            screen: "Session Manager",
+            title: "Close and Terminate Session",
+            desc: "Once the verification is complete, close the browser session and exit OnWorks safely.",
+            action: "Session Complete ➔ Sign out and close"
+          }
+        ],
+        code: `# Terminal commands executable inside Ubuntu VM:\nuname -a\nlsb_release -a\nwhoami\npwd`,
+        output: `• Ubuntu 22 Linux Virtual Machine launched in cloud via browser.\n• Web browser inside VM accessed internet successfully.\n• Virtual Linux environment verified.`
+      },
+      {
+        id: 3,
+        title: "3. Static Website",
+        shortTitle: "Ex 3: Static Website (GitHub Pages)",
+        videoSrc: "videos/ex3.mp4",
+        videoName: "Ex 3: Static Website on GitHub Pages Tutorial Video",
+        aim: "Develop an application to host a static website.",
+        steps: [
+          "Go to chrome Browser.",
+          "Search Github and create an account.",
+          "Create a 'new' repository.",
+          "Click the \"Add file\" option and click upload files.",
+          "Drag any files and click on commit changes.",
+          "Go to settings, click the option pages.",
+          "Change the branch name from \"main\" save the changes.",
+          "Now, it create a link for static website.",
+          "Click on that link & visit particular pages."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: github.com",
+            title: "Login or Sign Up on GitHub",
+            desc: "Open Chrome, navigate to github.com, and sign in to your GitHub account.",
+            action: "https://github.com"
+          },
+          {
+            screen: "GitHub Dashboard",
+            title: "Create a New Repository",
+            desc: "Click the '+' icon or 'New' repository button. Name repository 'static-website' and keep it Public.",
+            action: "Repository Name: 'my-static-web' ➔ Public ➔ Create"
+          },
+          {
+            screen: "Repository Code Page",
+            title: "Upload index.html & style.css",
+            desc: "Click 'Add file' ➔ 'Upload files'. Drag your index.html and style.css files into the upload box and click 'Commit changes'.",
+            action: "Add file ➔ Upload files ➔ Commit changes"
+          },
+          {
+            screen: "Repository Settings > Pages",
+            title: "Enable GitHub Pages Hosting",
+            desc: "Click 'Settings' tab in your repository ➔ Click 'Pages' in left sidebar. Under Branch, select 'main' branch and root folder, then click Save.",
+            action: "Settings ➔ Pages ➔ Source: Deploy from branch ➔ 'main' ➔ Save"
+          },
+          {
+            screen: "Live Website",
+            title: "Access Live Website URL",
+            desc: "GitHub Pages generates your live website link (e.g. https://<username>.github.io/<repo>/). Click the link to view your deployed site!",
+            action: "https://<your-username>.github.io/my-static-web/"
+          }
+        ],
+        code: `<!-- index.html -->\n<!DOCTYPE html>\n<html>\n<head>\n  <title>Trinity College for Women - CS Department</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <h1>PG & Research Department of Computer Science</h1>\n  <p>Static Website Hosted Successfully on GitHub Pages!</p>\n</body>\n</html>`,
+        output: `• Repository created and files committed on GitHub.\n• GitHub Pages deployed successfully.\n• Static website live and accessible at public URL.`
+      },
+      {
+        id: 4,
+        title: "4. Google Cloud",
+        shortTitle: "Ex 4: Google Cloud Platform",
+        videoSrc: "videos/ex4.mp4",
+        videoName: "Ex 4: Google Cloud Platform Tutorial Video",
+        aim: "Develop an application to exploring google cloud for storing, sharing data, manage your calendar, to-do list, a document editing tool.",
+        steps: [
+          "Create a google cloud project.",
+          "Go to the google cloud console and sign in.",
+          "Create a new project.",
+          "Click on storage service, create bucket on a specific location and set the default storage class.",
+          "Click on create option.",
+          "Open the bucket and click on upload files.",
+          "Enter the email address of the user and choose the role.",
+          "Click on save option and generate shareable link.",
+          "Go to google calendar and sign in the google account.",
+          "Click on create button.",
+          "Fill the event details and click save option.",
+          "Go to step 10 and fill the tasks details.",
+          "Click save option.",
+          "Finally manage your events and tasks."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: console.cloud.google.com",
+            title: "Open Google Cloud Console & Create Project",
+            desc: "Sign in to console.cloud.google.com. Click project dropdown ➔ 'New Project'. Name it 'CloudLabProject' and click Create.",
+            action: "Select project ➔ 'New Project' ➔ Create"
+          },
+          {
+            screen: "GCP Console > Cloud Storage",
+            title: "Create Cloud Storage Bucket",
+            desc: "Open navigation menu ➔ Cloud Storage ➔ Buckets ➔ 'Create'. Provide globally unique bucket name (e.g. trinity-cloud-bucket-01), choose region, and Standard storage class.",
+            action: "Cloud Storage ➔ Create Bucket ➔ Standard class"
+          },
+          {
+            screen: "Storage Bucket Details",
+            title: "Upload File & Set Permissions",
+            desc: "Open the newly created bucket. Click 'Upload Files' and select a document. Click 'Permissions' tab ➔ Grant Access ➔ enter email and assign role 'Storage Object Viewer'.",
+            action: "Upload Files ➔ Grant Access ➔ 'Storage Object Viewer'"
+          },
+          {
+            screen: "browser: calendar.google.com",
+            title: "Schedule Events in Google Calendar",
+            desc: "Open Google Calendar. Click '+ Create' ➔ 'Event'. Set title 'Cloud Lab Review', date, time, and save.",
+            action: "Calendar ➔ Create Event ➔ 'Cloud Lab Review'"
+          },
+          {
+            screen: "Google Tasks / Keep",
+            title: "Create and Manage To-Do Tasks",
+            desc: "Click on the Tasks/Keep icon in the sidebar. Add checklist items: 'Submit Lab Report', 'Review Storage Buckets', and check off completed items.",
+            action: "Tasks ➔ Add Task ➔ 'Submit Lab Record' ➔ Save"
+          }
+        ],
+        code: `// Google Cloud Storage & Calendar Verification:\n1. Bucket URL: https://storage.googleapis.com/trinity-cloud-bucket-01/file.pdf\n2. IAM Role: roles/storage.objectViewer\n3. Calendar Event: 'Cloud Lab Review' with guest invitations`,
+        output: `• Google Cloud project and Storage bucket created.\n• Object uploaded and access permissions granted.\n• Google Calendar events and To-Do task checklist synchronized.`
+      },
+      {
+        id: 5,
+        title: "5. Google App Engine",
+        shortTitle: "Ex 5: Google App Engine",
+        videoSrc: "videos/ex5.mp4",
+        videoName: "Ex 5: Google App Engine Tutorial (Interactive Walkthrough)",
+        aim: "To develop an application working and installation of google app engine.",
+        steps: [
+          "Install google app engine software.",
+          "Install python 2.7.9 windows x86-64 MSI installer.",
+          "Go to google app engine launcher.",
+          "Click edit, choose preferences, set the python path and app engine SDK path.",
+          "Click ok button.",
+          "Create an empty folder on the desktop.",
+          "Again go to step 3.",
+          "Go to file and create new application, give the application name & Browse the parent directory.",
+          "Click create button, the project will be created in the folder.",
+          "Select the project and click the run option to run a project.",
+          "Open the chrome and type localhost 8080 and enter it.",
+          "Finally, the application was shown."
+        ],
+        walkthrough: [
+          {
+            screen: "Windows Installer",
+            title: "Install Python 2.7.9 & Google App Engine SDK",
+            desc: "Download and run Python 2.7.9 64-bit MSI installer (installs to C:\\Python27). Then install the Google App Engine SDK for Python.",
+            action: "Install python-2.7.9.amd64.msi ➔ Install GoogleAppEngine-1.9.msi"
+          },
+          {
+            screen: "Google App Engine Launcher",
+            title: "Configure Preferences in GAE Launcher",
+            desc: "Launch Google App Engine Launcher from Start Menu. Click 'Edit' menu ➔ 'Preferences'. Set Python Path: 'C:\\Python27\\python.exe' and App Engine SDK: 'C:\\Program Files (x86)\\Google\\google_appengine'.",
+            action: "Edit ➔ Preferences ➔ Set Python Path: C:\\Python27\\python.exe ➔ OK"
+          },
+          {
+            screen: "Windows Explorer",
+            title: "Create Project Folder on Desktop",
+            desc: "Right-click on your Desktop ➔ New ➔ Folder. Name the folder 'mygaeapp'.",
+            action: "Create Folder: C:\\Users\\Desktop\\mygaeapp"
+          },
+          {
+            screen: "GAE Launcher > File Menu",
+            title: "Create New Application in Launcher",
+            desc: "In GAE Launcher, click 'File' ➔ 'New Application'. Application Name: 'mygaeapp', Parent Directory: 'C:\\Users\\Desktop'. Click Create button. Files app.yaml & main.py are generated automatically.",
+            action: "File ➔ New Application ➔ Application Name: mygaeapp ➔ Create"
+          },
+          {
+            screen: "GAE Launcher Toolbar",
+            title: "Run Application Locally",
+            desc: "Select the 'mygaeapp' project in the list. Click the green 'Run' button. Status changes from stopped to running on port 8080.",
+            action: "Select 'mygaeapp' ➔ Click 'Run' (Green Play Button)"
+          },
+          {
+            screen: "browser: localhost:8080",
+            title: "View Output in Chrome Browser",
+            desc: "Open Google Chrome, navigate to http://localhost:8080 and press Enter. The webpage displays 'Hello, World from Google App Engine!'.",
+            action: "Chrome URL: http://localhost:8080 ➔ 'Hello, World!'"
+          }
+        ],
+        code: `# app.yaml\napplication: mygaeapp\nversion: 1\nruntime: python27\napi_version: 1\nthreadsafe: true\n\nhandlers:\n- url: /.*\n  script: main.app\n\n# main.py\nimport webapp2\n\nclass MainPage(webapp2.RequestHandler):\n    def get(self):\n        self.response.headers['Content-Type'] = 'text/plain'\n        self.response.write('Hello, World from Google App Engine!')\n\napp = webapp2.WSGIApplication([('/', MainPage)], debug=True)`,
+        output: `• Google App Engine Launcher configured with Python 2.7.\n• Local server running at http://localhost:8080.\n• Chrome browser successfully displays 'Hello, World from Google App Engine!'.`
+      },
+      {
+        id: 6,
+        title: "6. Microsoft Azure",
+        shortTitle: "Ex 6: Microsoft Azure",
+        videoSrc: "videos/ex6.mp4",
+        videoName: "Ex 6: Microsoft Azure Hosting Tutorial (Interactive Walkthrough)",
+        aim: "To develop an application working and installation of microsoft azure.",
+        steps: [
+          "Go to microsoft Azure and enter your credentials.",
+          "Click \"new\" button in the bottom of the logo.",
+          "Click compute -> website -> Quick Create.",
+          "Enter the URL for the websites which is followed by azure websites.",
+          "Click create website button.",
+          "Website created and shows your website details, click \"allow button\" in right side of your site name.",
+          "Click 'download the profile' and save.",
+          "Open visual studio then click new -> website -> ASP.NET website.",
+          "In VS right-click the project in solution explorer and select publish from the context menu.",
+          "In the profile tab of the publish wizard, click import."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: portal.azure.com",
+            title: "Sign in to Microsoft Azure Portal",
+            desc: "Open your browser and navigate to portal.azure.com (or manage.windowsazure.com) and log in with your Microsoft account credentials.",
+            action: "https://portal.azure.com ➔ Enter Credentials ➔ Sign In"
+          },
+          {
+            screen: "Azure Portal > Compute",
+            title: "Create Web App via Quick Create",
+            desc: "Click '+ New' ➔ Compute ➔ Web App (Quick Create). Enter your preferred URL: 'trinityapp.azurewebsites.net' and choose App Service Plan. Click 'Create Web App'.",
+            action: "+ NEW ➔ Compute ➔ Web App ➔ Quick Create ➔ 'trinityapp'"
+          },
+          {
+            screen: "Web App Dashboard",
+            title: "Download Publish Profile",
+            desc: "Once the website status shows 'Running', click on your website name. In the dashboard menu, click 'Get publish profile' (or 'Download the profile') and save the .PublishSettings file.",
+            action: "Dashboard ➔ Click 'Get publish profile' ➔ Save file"
+          },
+          {
+            screen: "Visual Studio IDE",
+            title: "Create ASP.NET Web Project in Visual Studio",
+            desc: "Open Visual Studio ➔ File ➔ New ➔ Project / Web Site ➔ Choose 'ASP.NET Empty Web Application'. Add Default.aspx with heading 'Welcome To My Web Site :)'.",
+            action: "Visual Studio ➔ New Project ➔ ASP.NET Empty Web Application"
+          },
+          {
+            screen: "Solution Explorer > Publish",
+            title: "Publish Wizard & Import Profile",
+            desc: "In Solution Explorer, right-click the ASP.NET project ➔ Select 'Publish'. In the Profile tab, click 'Import' ➔ select the downloaded .PublishSettings file ➔ Click 'Publish'.",
+            action: "Right Click Project ➔ Publish ➔ Import Profile ➔ Click 'Publish'"
+          },
+          {
+            screen: "browser: trinityapp.azurewebsites.net",
+            title: "Access Live Website on Azure",
+            desc: "Visual Studio deploys your project to Azure Cloud and launches browser automatically displaying 'Welcome To My Web Site :)' on your live Azure URL!",
+            action: "http://trinityapp.azurewebsites.net ➔ 'Welcome To My Web Site :)'"
+          }
+        ],
+        code: `<!-- Default.aspx -->\n<%@ Page Language="C#" AutoEventWireup="true" %>\n<!DOCTYPE html>\n<html>\n<head runat="server">\n    <title>Trinity College - Azure Website</title>\n</head>\n<body>\n    <form id="form1" runat="server">\n        <div>\n            <h1>Welcome To My Web Site :)</h1>\n            <p>Hosted on Microsoft Azure App Service via Visual Studio</p>\n        </div>\n    </form>\n</body>\n</html>`,
+        output: `• Azure Web App created with custom subdomain.\n• Project published directly from Visual Studio via downloaded profile.\n• Live website running successfully at http://<sitename>.azurewebsites.net.`
+      },
+      {
+        id: 7,
+        title: "7. Amazon Redshift",
+        shortTitle: "Ex 7: Amazon Redshift with S3",
+        videoSrc: "videos/ex7.mp4",
+        videoName: "Ex 7: Amazon Redshift with S3 Tutorial (Interactive Walkthrough)",
+        aim: "Develop an application to connect amazon redshift with S3 bucket.",
+        steps: [
+          "Create an account in amazon web services (AWS).",
+          "Open the amazon S3 bucket.",
+          "Click the create bucket option and write the bucket name and enable the bucket versioning.",
+          "Now, click the bucket name, upload some files.",
+          "Copy the S3 URL and ARN.",
+          "Search IAM and click it.",
+          "Click the roles option and click create role.",
+          "Change the service or use case to redshift and click next.",
+          "Click the policy name and enter the next option.",
+          "The role was created in few seconds.",
+          "Search the amazon redshift.",
+          "Create a cluster and click Associate IAM role.",
+          "Enter the Associate IAM role option.",
+          "Enter the create cluster option."
+        ],
+        walkthrough: [
+          {
+            screen: "browser: aws.amazon.com",
+            title: "Sign in to AWS & Open Amazon S3",
+            desc: "Log in to the AWS Management Console. Search for 'S3' and open the Amazon S3 Storage console.",
+            action: "AWS Console ➔ Search 'S3' ➔ Open S3 Dashboard"
+          },
+          {
+            screen: "Amazon S3 > Create Bucket",
+            title: "Create Bucket & Enable Versioning",
+            desc: "Click 'Create bucket'. Enter bucket name (e.g. 'deeku-redshift-data'). Under Bucket Versioning, choose 'Enable'. Click 'Create bucket'.",
+            action: "Create Bucket ➔ Name: 'deeku-redshift-data' ➔ Enable Versioning"
+          },
+          {
+            screen: "S3 Bucket Details",
+            title: "Upload Dataset File & Copy ARN",
+            desc: "Open your bucket ➔ Click 'Upload' ➔ Add your data file ('orders.txt'). Once uploaded, click on file details and copy the S3 URI and ARN.",
+            action: "Upload 'orders.txt' ➔ Copy S3 URI: s3://deeku-redshift-data/orders.txt"
+          },
+          {
+            screen: "AWS IAM Console",
+            title: "Create IAM Role for Amazon Redshift",
+            desc: "Search for 'IAM' in console ➔ Click 'Roles' ➔ 'Create role'. Trusted entity: 'AWS service' ➔ Use case: 'Redshift - Customizable'. Attach policy: 'AmazonS3FullAccess'. Name role 'RedshiftS3Role' and click Create.",
+            action: "IAM ➔ Create Role ➔ Service: Redshift ➔ Policy: AmazonS3FullAccess"
+          },
+          {
+            screen: "Amazon Redshift Console",
+            title: "Create Cluster & Associate IAM Role",
+            desc: "Search for 'Amazon Redshift' ➔ Click 'Create cluster'. Identifier: 'redshift-cluster-1', Node type: 'dc2.large'. Under Cluster permissions, click 'Associate IAM role' ➔ select 'RedshiftS3Role'. Click 'Create cluster'.",
+            action: "Redshift ➔ Create Cluster ➔ Associate IAM Role: 'RedshiftS3Role'"
+          },
+          {
+            screen: "Redshift Query Editor",
+            title: "Run Table Creation and COPY Command",
+            desc: "Open Query Editor v2. Connect to database. Run CREATE TABLE Orders (...). Then run COPY command to load data directly from your S3 bucket into the Redshift table!",
+            action: "COPY Orders FROM 's3://deeku-redshift-data/orders.txt' IAM_ROLE '...'"
+          }
+        ],
+        code: `-- 1. Create table in Amazon Redshift Query Editor:\nCREATE TABLE Orders (\n    order_id int,\n    order_quantity int,\n    item_name varchar(255),\n    choice_description varchar(255),\n    item_price varchar(100)\n);\n\n-- 2. Bulk load data from S3 bucket using IAM Role:\nCOPY Orders\nFROM 's3://deeku-redshift-data/orders.txt'\nIAM_ROLE 'arn:aws:iam::123456789012:role/RedshiftS3Role'\nREGION 'us-east-1'\nIGNOREHEADER 1;`,
+        output: `• Amazon S3 bucket created with versioning and dataset uploaded.\n• IAM Role configured with AmazonS3FullAccess.\n• Amazon Redshift cluster associated with IAM Role and populated with data.`
+      },
+      {
+        id: 8,
+        title: "8. Query Using NoSQL Table",
+        shortTitle: "Ex 8: NoSQL MongoDB Query",
+        videoSrc: "videos/ex8.mp4",
+        videoName: "Ex 8: NoSQL MongoDB Query Tutorial (Interactive Walkthrough)",
+        aim: "Develop an application to create and Query an NOSQL table.",
+        steps: [
+          "Install the mongodb software.",
+          "Install mongodb shell software.",
+          "Install NoSQL Booster IDE.",
+          "Open the NoSQL Booster.",
+          "Connect the database, click the localhost and startup-log file.",
+          "Write the NoSQL queries.",
+          "Create a database product DS.",
+          "Create collections (or) table products.",
+          "Insert some rows/records.",
+          "List all the rows/records.",
+          "Show all the list of all database and collections.",
+          "Run the queries.",
+          "It shows the product details of the collections."
+        ],
+        walkthrough: [
+          {
+            screen: "Software Installation",
+            title: "Install MongoDB Server, Shell & NoSQL Booster",
+            desc: "Download and install MongoDB Community Server on Windows. Install mongosh (MongoDB Shell) and NoSQL Booster for MongoDB IDE.",
+            action: "Install mongodb-windows-x86_64.msi ➔ Install nosqlbooster4mongo.exe"
+          },
+          {
+            screen: "NoSQL Booster IDE",
+            title: "Launch NoSQL Booster & Connect to Localhost",
+            desc: "Launch NoSQL Booster IDE. Click the 'Connect' button in top toolbar ➔ select 'localhost:27017' connection ➔ Click 'Connect'.",
+            action: "NoSQL Booster ➔ Connect ➔ 'localhost:27017' ➔ Connect"
+          },
+          {
+            screen: "Query Editor",
+            title: "Create Database 'productDS'",
+            desc: "Open a new query script tab (Ctrl+T). Type command 'use productDS;' to create and switch to database productDS.",
+            action: "use productDS;"
+          },
+          {
+            screen: "Query Editor",
+            title: "Create Collection & Insert Documents",
+            desc: "Type 'db.createCollection(\"products\");' followed by 'db.products.insertMany([...])' with product items (Laptop, Keyboard, Mouse, Monitor).",
+            action: "db.products.insertMany([{ item_id: 101, name: 'Laptop', price: 55000 }, ...]);"
+          },
+          {
+            screen: "Query Editor",
+            title: "Query & Filter Records",
+            desc: "Write query to list all products: 'db.products.find().pretty();' and filter items by price: 'db.products.find({ price: { $gt: 1000 } });'.",
+            action: "db.products.find({ price: { $gt: 1000 } });"
+          },
+          {
+            screen: "Results Grid & JSON Viewer",
+            title: "Run Query & View Table Output",
+            desc: "Click 'Run' (F5). The bottom pane displays the query results in formatted JSON tree and tabular grid format showing all product documents!",
+            action: "Press F5 / Click 'Run' ➔ View Output Grid"
+          }
+        ],
+        code: `// 1. Switch / Create Database\nuse productDS;\n\n// 2. Create Collection\ndb.createCollection("products");\n\n// 3. Insert Documents\ndb.products.insertMany([\n  { item_id: 101, name: "Laptop", price: 55000, category: "Electronics" },\n  { item_id: 102, name: "Keyboard", price: 1500, category: "Accessories" },\n  { item_id: 103, name: "Mouse", price: 650, category: "Accessories" },\n  { item_id: 104, name: "Monitor", price: 12000, category: "Electronics" }\n]);\n\n// 4. Query All Documents\ndb.products.find().pretty();\n\n// 5. Query with Condition (Price > 1000)\ndb.products.find({ price: { $gt: 1000 } });`,
+        output: `• MongoDB and NoSQL Booster connected to localhost:27017.\n• Database 'productDS' and collection 'products' created.\n• Documents inserted and queried successfully in NoSQL Booster grid.`
+      }
+    ];
+
+    let currentProgIndex = 0;
+    let simStepIndex = 0;
+    let simAutoPlayTimer = null;
+    let currentMode = 'video'; // 'video' or 'interactive'
+
+    // Pre-mapped videos saved in project videos/ folder!
+    const videoMap = {
+      1: { src: "videos/ex1.mp4", name: "Ex 1: Google Drive, Sheets & Notes Tutorial Video" },
+      2: { src: "videos/ex2.mp4", name: "Ex 2: Linux Virtual Machine on OnWorks Tutorial Video" },
+      4: { src: "videos/ex4.mp4", name: "Ex 4: Google Cloud Platform Tutorial Video" },
+      7: { src: "videos/ex7.mp4", name: "Ex 7: Amazon Redshift with S3 Tutorial Video" }
+    };
+
+    const programListEl = document.getElementById('programList');
+    const currentProgTitleEl = document.getElementById('currentProgTitle');
+    const aimTextEl = document.getElementById('aimText');
+    const stepsListEl = document.getElementById('stepsList');
+    const tutorialGuideListEl = document.getElementById('tutorialGuideList');
+    const codeTextEl = document.getElementById('codeText');
+    const outputTextEl = document.getElementById('outputText');
+    const notesArea = document.getElementById('notesArea');
+    const copyCodeBtn = document.getElementById('copyCodeBtn');
+
+    const videoPlayer = document.getElementById('mainVideoPlayer');
+    const interactivePlayer = document.getElementById('interactivePlayer');
+    const videoModeBtn = document.getElementById('videoModeBtn');
+    const interactiveModeBtn = document.getElementById('interactiveModeBtn');
+    const selectVideoBtn = document.getElementById('selectVideoBtn');
+    const videoFileInput = document.getElementById('videoFileInput');
+    const videoDropZone = document.getElementById('videoDropZone');
+    const dragOverlay = document.getElementById('dragOverlay');
+    const currentPlayingName = document.getElementById('currentPlayingName');
+    const speedBox = document.getElementById('speedBox');
+
+    // Simulator Elements
+    const simStepBadge = document.getElementById('simStepBadge');
+    const simScreenTitle = document.getElementById('simScreenTitle');
+    const simStepTitle = document.getElementById('simStepTitle');
+    const simStepDesc = document.getElementById('simStepDesc');
+    const simActionText = document.getElementById('simActionText');
+    const simCopyBtn = document.getElementById('simCopyBtn');
+    const simPrevBtn = document.getElementById('simPrevBtn');
+    const simNextBtn = document.getElementById('simNextBtn');
+    const simAutoPlayBtn = document.getElementById('simAutoPlayBtn');
+    const simProgressDots = document.getElementById('simProgressDots');
+
+    function renderSidebar() {
+      programListEl.innerHTML = '';
+      programsData.forEach((prog, index) => {
+        const li = document.createElement('li');
+        li.className = `program-item ${index === currentProgIndex ? 'active' : ''}`;
+        
+        const hasRealVideo = !!videoMap[prog.id];
+
+        li.innerHTML = `
+          <div class="prog-num">${prog.id}</div>
+          <div style="flex:1;">
+            <div class="prog-title">${prog.shortTitle}</div>
+            <div class="video-status ${hasRealVideo ? 'status-video' : 'status-interactive'}">
+              ${hasRealVideo ? '● Video Ready' : '★ Visual Tutorial'}
+            </div>
+          </div>
+        `;
+
+        li.addEventListener('click', () => switchProgram(index));
+        programListEl.appendChild(li);
+      });
+    }
+
+    function switchProgram(index) {
+      currentProgIndex = index;
+      const prog = programsData[index];
+
+      currentProgTitleEl.textContent = prog.title;
+      aimTextEl.textContent = prog.aim;
+
+      // Steps List
+      stepsListEl.innerHTML = '';
+      prog.steps.forEach((step, sIdx) => {
+        const item = document.createElement('li');
+        item.className = 'step-item';
+        item.innerHTML = `<span class="step-number">Step ${sIdx + 1}</span><span>${step}</span>`;
+        stepsListEl.appendChild(item);
+      });
+
+      // Tutorial Guide Tab
+      tutorialGuideListEl.innerHTML = '';
+      prog.walkthrough.forEach((wt, wIdx) => {
+        const card = document.createElement('div');
+        card.style.cssText = 'background:rgba(15,23,42,0.7); border:1px solid var(--border-color); border-radius:10px; padding:16px;';
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            <strong style="color:var(--primary); font-size:0.95rem;">Step ${wIdx + 1}: ${wt.title}</strong>
+            <span style="font-size:0.75rem; background:#1e293b; padding:3px 8px; border-radius:6px; color:#94a3b8; font-family:monospace;">${wt.screen}</span>
+          </div>
+          <p style="color:#cbd5e1; font-size:0.9rem; margin-bottom:10px;">${wt.desc}</p>
+          <div style="background:#030712; padding:8px 12px; border-radius:6px; font-family:monospace; font-size:0.85rem; color:#38bdf8;">
+            ➔ ${wt.action}
+          </div>
+        `;
+        tutorialGuideListEl.appendChild(card);
+      });
+
+      // Code
+      codeTextEl.textContent = prog.code;
+
+      // Output
+      outputTextEl.innerHTML = prog.output.replace(/\\n/g, '<br>');
+
+      // Notes
+      const savedNotes = localStorage.getItem('notes_prog_' + prog.id) || '';
+      notesArea.value = savedNotes;
+
+      // Setup Simulator
+      simStepIndex = 0;
+      updateSimulatorStep();
+
+      // Check if video file is mapped
+      if (videoMap[prog.id]) {
+        setMode('video');
+        videoPlayer.src = videoMap[prog.id].src;
+        currentPlayingName.textContent = '▶ Now Playing: ' + videoMap[prog.id].name;
+        videoPlayer.play().catch(() => {});
+      } else {
+        // Automatically default to rich interactive tutorial mode for Ex 5-8!
+        setMode('interactive');
+        currentPlayingName.textContent = '🖥️ Interactive Tutorial: ' + prog.title;
+      }
+
+      renderSidebar();
+    }
+
+    function setMode(mode) {
+      currentMode = mode;
+      stopAutoPlay();
+
+      if (mode === 'video') {
+        videoModeBtn.classList.add('active');
+        interactiveModeBtn.classList.remove('active');
+        videoPlayer.classList.remove('hidden');
+        interactivePlayer.classList.add('hidden');
+        speedBox.classList.remove('hidden');
+      } else {
+        videoPlayer.pause();
+        interactiveModeBtn.classList.add('active');
+        videoModeBtn.classList.remove('active');
+        interactivePlayer.classList.remove('hidden');
+        videoPlayer.classList.add('hidden');
+        speedBox.classList.add('hidden');
+      }
+    }
+
+    videoModeBtn.addEventListener('click', () => setMode('video'));
+    interactiveModeBtn.addEventListener('click', () => setMode('interactive'));
+
+    // Simulator Logic
+    function updateSimulatorStep() {
+      const prog = programsData[currentProgIndex];
+      const step = prog.walkthrough[simStepIndex];
+      const totalSteps = prog.walkthrough.length;
+
+      simStepBadge.textContent = `Step ${simStepIndex + 1} of ${totalSteps}`;
+      simScreenTitle.textContent = step.screen;
+      simStepTitle.textContent = step.title;
+      simStepDesc.textContent = step.desc;
+      simActionText.textContent = step.action;
+
+      // Dots
+      simProgressDots.innerHTML = '';
+      for (let i = 0; i < totalSteps; i++) {
+        const dot = document.createElement('div');
+        dot.className = `p-dot ${i === simStepIndex ? 'active' : ''}`;
+        dot.addEventListener('click', () => {
+          simStepIndex = i;
+          updateSimulatorStep();
+        });
+        simProgressDots.appendChild(dot);
+      }
+    }
+
+    simPrevBtn.addEventListener('click', () => {
+      const prog = programsData[currentProgIndex];
+      if (simStepIndex > 0) {
+        simStepIndex--;
+        updateSimulatorStep();
+      }
+    });
+
+    simNextBtn.addEventListener('click', () => {
+      const prog = programsData[currentProgIndex];
+      if (simStepIndex < prog.walkthrough.length - 1) {
+        simStepIndex++;
+      } else {
+        simStepIndex = 0; // loop
+      }
+      updateSimulatorStep();
+    });
+
+    function stopAutoPlay() {
+      if (simAutoPlayTimer) {
+        clearInterval(simAutoPlayTimer);
+        simAutoPlayTimer = null;
+        simAutoPlayBtn.textContent = '⏱️ Auto-Play';
+        simAutoPlayBtn.classList.remove('btn-primary');
+      }
+    }
+
+    simAutoPlayBtn.addEventListener('click', () => {
+      if (simAutoPlayTimer) {
+        stopAutoPlay();
+      } else {
+        simAutoPlayBtn.textContent = '⏸ Pause';
+        simAutoPlayBtn.classList.add('btn-primary');
+        simAutoPlayTimer = setInterval(() => {
+          simNextBtn.click();
+        }, 4000);
+      }
+    });
+
+    simCopyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(simActionText.textContent).then(() => {
+        simCopyBtn.textContent = '✅ Copied!';
+        setTimeout(() => simCopyBtn.textContent = '📋 Copy', 2000);
+      });
+    });
+
+    // Custom Video Upload / File Choose
+    selectVideoBtn.addEventListener('click', () => videoFileInput.click());
+    videoFileInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleVideoFile(e.target.files[0]);
+      }
+    });
+
+    function handleVideoFile(file) {
+      if (!file.type.startsWith('video/')) {
+        alert('தயவுசெய்து சரியான Video File-ஐ தேர்ந்தெடுக்கவும்!');
+        return;
+      }
+      const prog = programsData[currentProgIndex];
+      const blobUrl = URL.createObjectURL(file);
+      videoMap[prog.id] = {
+        src: blobUrl,
+        name: file.name
+      };
+      setMode('video');
+      videoPlayer.src = blobUrl;
+      currentPlayingName.textContent = '▶ Now Playing: ' + file.name;
+      videoPlayer.play().catch(() => {});
+      renderSidebar();
+    }
+
+    // Drag and Drop
+    videoDropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dragOverlay.classList.remove('hidden');
+    });
+
+    videoDropZone.addEventListener('dragleave', (e) => {
+      if (e.relatedTarget === null || !videoDropZone.contains(e.relatedTarget)) {
+        dragOverlay.classList.add('hidden');
+      }
+    });
+
+    videoDropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dragOverlay.classList.add('hidden');
+      if (e.dataTransfer.files.length > 0) {
+        handleVideoFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    // Speed Selector Buttons
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        videoPlayer.playbackRate = parseFloat(btn.dataset.speed);
+      });
+    });
+
+    // Tab Navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Copy Code button
+    copyCodeBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(codeTextEl.textContent).then(() => {
+        const oldText = copyCodeBtn.textContent;
+        copyCodeBtn.textContent = '✅ Copied!';
+        setTimeout(() => copyCodeBtn.textContent = oldText, 2000);
+      });
+    });
+
+    // Notes Auto-save
+    notesArea.addEventListener('input', () => {
+      const prog = programsData[currentProgIndex];
+      localStorage.setItem('notes_prog_' + prog.id, notesArea.value);
+    });
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.code === 'Space') {
+        e.preventDefault();
+        if (currentMode === 'video') {
+          videoPlayer.paused ? videoPlayer.play() : videoPlayer.pause();
+        } else {
+          simAutoPlayBtn.click();
+        }
+      } else if (e.code === 'ArrowRight') {
+        if (currentMode === 'video') {
+          videoPlayer.currentTime += 5;
+        } else {
+          simNextBtn.click();
+        }
+      } else if (e.code === 'ArrowLeft') {
+        if (currentMode === 'video') {
+          videoPlayer.currentTime -= 5;
+        } else {
+          simPrevBtn.click();
+        }
+      } else if (e.code === 'KeyF') {
+        if (!document.fullscreenElement) {
+          videoPlayer.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+    });
+
+    // Initialize Program 1
+    switchProgram(0);
+  </script>
+</body>
+</html>
